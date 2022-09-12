@@ -1,0 +1,191 @@
+<mujoco model="hebi">
+    <compiler angle="radian" meshdir="meshes/" />
+    <size njmax="500" nconmax="100" />
+    <option timestep="0.002" cone="elliptic" impratio="3"></option>
+    <asset>
+        <mesh name="X8" file="X8.stl" scale="0.001 0.001 0.001" />
+        <mesh name="PM-2149-01" file="PM-2149-01.stl" scale="0.001 0.001 0.001" />
+        <mesh name="PM-2150-01R" file="PM-2150-01R.stl" scale="0.001 0.001 0.001" />
+        <mesh name="A-2038-02" file="A-2038-02.stl" />
+        <mesh name="A-2039-02" file="A-2039-02.stl" />
+        <mesh name="X5" file="X5.stl" scale="0.001 0.001 0.001" />
+        <mesh name="PM-2132-01R" file="PM-2132-01R.stl" scale="0.001 0.001 0.001" />
+        <mesh name="PM-2132-01L" file="PM-2132-01L.stl" scale="0.001 0.001 0.001" />
+        <mesh name="chopstick" file="chopstick.stl" />
+        <mesh name="chopstick_collision" file="chopstick_collision.stl" />
+        <mesh name="chopstick_mount_m3" file="chopstick_mount_m3.stl" />
+        <mesh name="chopstick_mount_m5" file="chopstick_mount_m5.stl" />
+        <material name="floor_mat" specular="0.5" shininess="0.5" reflectance="0.2" rgba="0.2 0.2 0.2 1" />
+        <material name="table_mat" specular="0.5" shininess="0.5" reflectance="0.2" rgba="0.93 0.93 0.93 1" />
+        <material name="block_mat" specular="0" shininess="0.5" reflectance="0.2" rgba="0.2 0.2 0.2 1" />
+        <material name="motor" specular="0" shininess="0.5" reflectance="0.2" rgba="0.82 0.06 0.06 1" />
+        <material name="contact" specular="0" shininess="0.5" reflectance="0.2" rgba="0.06 0.06 0.82 0.5" />
+    </asset>
+    <default>
+        <geom contype="0" conaffinity="0" group="0" />
+        <site rgba="1 1 0 0.3" />
+        <default class="conty">
+            <geom contype="1" conaffinity="0" condim="6" group="1" friction="0.4 0.002 0.00008" solref="0.0035 1" />
+        </default>
+        <default class="conaff">
+            <geom contype="0" conaffinity="1" condim="6" group="1" friction="0.4 0.002 0.00008" solref="0.0035 1" />
+        </default>
+        <default class="X8">
+            <joint damping="16" armature="0.01" frictionloss="0.1" limited="false" />
+            <!-- <position forcelimited="true" forcerange="-20 20" />
+            <velocity ctrllimited="true" ctrlrange="-0.001 0.001" />
+            <motor forcelimited="true" forcerange="-20 20" ctrllimited="true" ctrlrange="-1 1" />
+            <general ctrllimited="false" />-->
+        </default>
+        <default class="X8_16">
+            <joint damping="40" armature="0.01" frictionloss="0.1" limited="false" />
+            <!--<position forcelimited="true" forcerange="-20 20" />
+            <velocity ctrllimited="true" ctrlrange="-0.001 0.001" />
+            <motor forcelimited="true" forcerange="-38 38" ctrllimited="true" ctrlrange="-1 1" />
+            <general ctrllimited="false" />-->
+        </default>
+        <default class="X5">
+            <joint damping="3" armature="0.01" frictionloss="0.1" limited="false" />
+            <!--<position forcelimited="true" forcerange="-2.5 2.5" />
+            <velocity ctrllimited="true" ctrlrange="-0.001 0.001" />
+            <motor forcelimited="true" forcerange="-2.5 2.5" ctrllimited="true" ctrlrange="-1 1" />
+            <general ctrllimited="false" />-->
+        </default>
+    </default>
+    <worldbody>
+        <light diffuse=".5 .5 .5" pos="0 0 3" dir="0 0 -1" castshadow="true" />
+        <!-- Arena -->
+        <geom name="ground" class="conaff" pos="0 0 0" rgba="0.9 0.9 0.9 1" size="1 1 10" type="plane" material="table_mat" />
+        <camera name="realsense" mode="fixed" pos="0 0 0.3" xyaxes="0 -1 0 0 0 -1" />
+        <!-- Plate -->
+        <body name="plate" pos="-0.38 -0.26 0.0">
+            <geom name="plate" class="conaff"  rgba="0.5 0.5 0.5 1.0" type="box" size="0.03 0.035 0.0425"/>
+        </body>
+        <!-- Arm -->
+        <geom type="mesh" material="motor" mesh="X8" />
+        <body name="shoulder_bracket" pos="0 0 0.0451">
+            <inertial pos="-0.0101505 -0.0489759 0.0451999" quat="0.718812 0.149694 -0.472541 0.487449" mass="0.715" diaginertia="0.00112021 0.00103065 0.000684707" />
+            <joint class="X8" name="HEBI/base/X8_9" pos="0 0 0" axis="0 0 1" range="-6.28319 3.14159" />
+            <geom pos="0 0 0.005" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.1 0.1 0.1 1" mesh="PM-2149-01" />
+            <geom pos="0 -0.03 0.04" quat="0.707107 0.707107 0 0" type="mesh" rgba="0.1 0.1 0.1 1" mesh="PM-2150-01R" />
+            <geom pos="0 -0.0377828 0.0559164" quat="0.707026 0.707188 -0.000222492 -0.000222441" type="mesh" material="motor" mesh="X8" />
+            <body name="shoulder_elbow" pos="-2.83783e-05 -0.0828828 0.0559061" quat="0.707026 0.707188 -0.000222492 -0.000222441">
+                <inertial pos="0.24476 0.00166405 -0.00402425" quat="0.431578 0.559288 0.519097 0.48112" mass="0.882933" diaginertia="0.00928293 0.0091724 0.000436915" />
+                <joint class="X8_16" name="HEBI/shoulder/X8_16" pos="0 0 0" axis="0 0 1" range="-0.5 3.14159" />
+                <geom type="mesh" rgba="0.1 0.1 0.1 1" mesh="A-2038-02" />
+                <geom size="0.016 0.150967" pos="0.163667 0 0.02" quat="0.707123 0 0.70709 0" type="cylinder" rgba="0.1 0.1 0.1 1" />
+                <geom pos="0.327333 -3.22832e-05 2.60551e-08" quat="0.00080708 -1 0 0" type="mesh" rgba="0.1 0.1 0.1 1" mesh="A-2039-02" />
+                <geom pos="0.327333 0 1.37128e-05" quat="0.00080708 1 0 0" type="mesh" material="motor" mesh="X8" />
+                <body name="elbow_wrist1" pos="0.327333 -7.27986e-05 -0.0450862" quat="0.00080708 1 0 0">
+                    <inertial pos="0.227415 0.00136712 0.00396226" quat="0.385507 0.602589 0.446491 0.53751" mass="0.716861" diaginertia="0.00789864 0.00787214 0.000266408" />
+                    <joint class="X8" name="HEBI/elbow/X8_9" pos="0 0 0" axis="0 0 1" range="-3 3" />
+                    <geom type="mesh" rgba="0.1 0.1 0.1 1" mesh="A-2038-02" />
+                    <geom size="0.016 0.149626" pos="0.162326 0 0.02" quat="0.707123 0 0.70709 0" type="cylinder" rgba="0.1 0.1 0.1 1" />
+                    <geom pos="0.324653 1.36069e-05 4.62873e-09" quat="-0.000340174 -1 0 0" type="mesh" rgba="0.1 0.1 0.1 1" mesh="A-2039-02" />
+                    <geom pos="0.324653 0 0" quat="-0.000340174 1 0 0" type="mesh" material="motor" mesh="X5" />
+                    <body name="wrist1_wrist2" pos="0.324653 2.12949e-05 -0.0313" quat="-0.000340174 1 0 0">
+                        <inertial pos="-0.0107783 -0.0503558 0.0331911" quat="0.0844085 0.690206 0.480649 0.534292" mass="0.415" diaginertia="0.00057574 0.000532805 0.000374314" />
+                        <joint class="X5" name="HEBI/wrist1/X5_1" pos="0 0 0" axis="0 0 1" limited="false" range="-6.28319 6.28319" />
+                        <geom quat="0.5 0.5 -0.5 -0.5" type="mesh" rgba="0.96 0.945 0.871 1" mesh="PM-2132-01R" />
+                        <geom pos="0 -0.043 0.0403901" quat="0.709003 0.705206 0 0" type="mesh" material="motor" mesh="X5" />
+                        <body name="wrist2_wrist3" pos="0 -0.0742995 0.0405581" quat="0.709003 0.705206 0 0">
+                            <inertial pos="-0.0107783 -0.0501576 0.0329123" quat="0.0903114 0.687931 0.481337 0.53564" mass="0.415" diaginertia="0.00057305 0.000531677 0.00037321" />
+                            <joint class="X5" name="HEBI/wrist2/X5_1" pos="0 0 0" axis="0 0 1" limited="false" range="-4.71239 4.71239" />
+                            <geom quat="0.5 0.5 -0.5 -0.5" type="mesh" rgba="0.96 0.945 0.871 1" mesh="PM-2132-01R" />
+                            <geom pos="0 -0.0427352 0.0400024" quat="0.709438 0.704768 0 0" type="mesh" material="motor" mesh="X5" />
+                            <body name="wrist3_chopstick" pos="0 -0.0740345 0.0402091" quat="0.709438 0.704768 0 0">
+                                <inertial pos="-0.010267 0.0507442 0.0379799" quat="0.641276 0.450674 0.594973 0.177947" mass="0.4215" diaginertia="0.000651417 0.000496823 0.000437058" />
+                                <joint class="X5" name="HEBI/wrist3/X5_1" pos="0 0 0" axis="0 0 1" />
+                                <geom quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.96 0.945 0.871 1" mesh="PM-2132-01L" />
+                                <geom pos="0 0.043 0.04" quat="0.707107 -0.707107 0 0" type="mesh" material="motor" mesh="X5" />
+                                <geom name="stick" class="conaff" pos="0.000 0.07633497142049881778 0.06473519787338441731" type="capsule" quat="0.707 0 0.707 0" rgba="0.96 0.945 0.871 0.3" size="0.0013 0.13086872462992604760" />
+                                <!-- assume the chopsticks radius 0.0013 -->
+                                <site name="fixed_chop_tip"
+                                        pos="0.130868 0.0763349 0.06473519"
+                                        quat="0.5 0.5 0.5 0.5"
+                                        type="sphere"
+                                        size="0.001" />
+                                <site name="fixed_chop_end"
+                                        pos="-0.130868 0.0763349 0.06473519"
+                                        quat="0.5 0.5 0.5 0.5"
+                                        type="sphere"
+                                        size="0.001" />
+                                <!-- To match the EE element on DH link and on mujoco representation, here we specify ee pos='x y z', the corresponding position in FK calculated by DH link should be DH_FK * ( I + [x, y , z - 0.04]), where DH_FK is the first 6 DOF part   -->
+                                <site name="ee_in_6FK"
+                                        pos="0 0 0.04"
+                                        quat="0.5 0.5 0.5 0.5"
+                                        type="sphere"
+                                        size="0.001" />
+                                <body name="end_effector" pos="0 0.0743 0.04" quat="0.707107 -0.707107 0 0">
+                                    <inertial pos="0.0246402 0.00944904 0.00600006" quat="-0.153931 0.690149 0.153931 0.690149" mass="0.010" diaginertia="1.34287e-05 1.33988e-05 1.49984e-07" />
+                                    <joint class="X5" name="HEBI/chopstick/X5_1" pos="0 0 0" axis="0 0 1" />
+                                    <!-- rotate center is at the hollow hole-->
+                                    <geom name="chop" class="conaff" pos="0.0035 0.0048 0.002" quat="0.389 0.389 0.591 0.591" type="capsule" rgba="0.96 0.945 0.871 0.3" size="0.0013 0.128" />
+                                    <!-- this line is important, shift the moving chopsticks' position and quat. size assumed to be 0.0013 radius. -->
+                                    <site name="rot_chop_tip"
+                                        pos="0.12112 0.0553884 0.002"
+                                        quat="0.5 0.5 0.5 0.5"
+                                        type="sphere"
+                                        size="0.001" />
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+        <!-- For interactively tracking a end effector pose -->
+        <body name="pose" pos="0.7 0 0.1" xyaxes="0 -1 0 0 0 -1" mocap="true">
+            <geom name="pose" rgba="0 1 0 0." type="capsule" size="0.005 0.01" />
+            <site name="pose" rgba="0.9 0.2 0.2 0." type="sphere" size="0.005" />
+        </body>
+        <!-- Object to pickup -->
+        <body name="obj" pos="-0.52 -0.012 0.03678">
+            <geom name="obj" priority="10" class="conty" rgba="0.2 0.2 0.9 1" type="sphere" size="0.01" />
+            <joint name="obj" type="free" />
+        </body>
+        <body name="act" pos="-0.52 -0.012 0.03678">
+            <geom name="act" priority="10" class="conaff" rgba="0.9 0.2 0.2 0" type="sphere" size="0.005" contype="0" conaffinity="0"/>
+            <joint name="act" type="free" />
+        </body>
+        <!-- Object's goal pose -->
+        <body name="goal" pos="-0.52 -0.02 0.071306" mocap="true">
+            <geom name="goal" rgba="0.2 0.9 0.9 1." type="sphere" size="0.007" />
+            <site name="goal" rgba="0.2 0.9 0.9 1." type="sphere" size="0.007" />
+        </body>
+    </worldbody>
+    <!--     <contact>
+        <pair geom1="chop" geom2="stick" solref="0.001" />
+        <pair geom1="chop" geom2="block" solref="0.001" />
+        <pair geom1="stick" geom2="block" solref="0.001" />
+        <pair geom1="ground" geom2="block" />
+    </contact> -->
+    <actuator>
+        <!-- 24 volts from spec sheet
+        <general class="X8" biastype="none" biasprm="20   3.267" joint="HEBI/base/X8_9" name="base" />
+        <general class="X8_16" biastype="none" biasprm="38   1.759" joint="HEBI/shoulder/X8_16" name="shoulder" />
+        <general class="X8" biastype="none" biasprm="20   3.267" joint="HEBI/elbow/X8_9" name="elbow" />
+        <general class="X5" biastype="none" biasprm="2.5 14.074" joint="HEBI/wrist1/X5_1" name="wrist1" />
+        <general class="X5" biastype="none" biasprm="2.5 14.074" joint="HEBI/wrist2/X5_1" name="wrist2" />
+        <general class="X5" biastype="none" biasprm="2.5 14.074" joint="HEBI/wrist3/X5_1" name="wrist3" />
+        <general class="X5" biastype="none" biasprm="2.5 14.074" joint="HEBI/chopstick/X5_1" name="chop" />
+        -->
+        <!-- 24 volts from data
+        <general class="X8" biastype="none" biasprm="21.98 3.596" joint="HEBI/base/X8_9" name="base" />
+        <general class="X8_16" biastype="none" biasprm="41.80 1.934" joint="HEBI/shoulder/X8_16" name="shoulder" />
+        <general class="X8" biastype="none" biasprm="21.98 3.596" joint="HEBI/elbow/X8_9" name="elbow" />
+        <general class="X5" biastype="none" biasprm="2.98 15.481" joint="HEBI/wrist1/X5_1" name="wrist1" />
+        <general class="X5" biastype="none" biasprm="2.98 15.481" joint="HEBI/wrist2/X5_1" name="wrist2" />
+        <general class="X5" biastype="none" biasprm="2.98 15.481" joint="HEBI/wrist3/X5_1" name="wrist3" />
+        <general class="X5" biastype="none" biasprm="2.98 15.481" joint="HEBI/chopstick/X5_1" name="chop" />
+        -->
+        <!-- 24 volts from hebi gazebo -->
+        <general class="X8" biastype="none" biasprm="23.33 4.48" joint="HEBI/base/X8_9" name="base" />
+        <general class="X8_16" biastype="none" biasprm="44.7632 2.33" joint="HEBI/shoulder/X8_16" name="shoulder" />
+        <general class="X8" biastype="none" biasprm="23.33 42.48" joint="HEBI/elbow/X8_9" name="elbow" />
+        <general class="X5" biastype="none" biasprm="2.6611 14.125" joint="HEBI/wrist1/X5_1" name="wrist1" />
+        <general class="X5" biastype="none" biasprm="2.6611 14.125" joint="HEBI/wrist2/X5_1" name="wrist2" />
+        <general class="X5" biastype="none" biasprm="2.6611 14.125" joint="HEBI/wrist3/X5_1" name="wrist3" />
+        <general class="X5" biastype="none" biasprm="2.6611 14.125" joint="HEBI/chopstick/X5_1" name="chop" />
+    </actuator>
+</mujoco>

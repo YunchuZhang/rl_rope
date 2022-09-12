@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<group_gains>
+	<control_strategy>1 1 1 1 1 1 1</control_strategy>
+	<position />
+	<velocity />
+	<effort>
+		<min_target>-1.000000 -1.000000 -1.000000 -1.000000 -1.000000 -1.000000 -1.000000</min_target>
+		<max_target>1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000</max_target>
+	</effort>
+</group_gains>
