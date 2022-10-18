@@ -329,14 +329,24 @@ class TychoEnv_rope(gym.Env):
         # if failure:
         #     reward -= 10
         reward = np.array([0.0])
-        reward -= 5*np.linalg.norm(obj_pos[:2] - self.goal[:2])
-        if np.linalg.norm(obj_pos[:2] - self.goal[:2]) < 0.01:
-            reward += 2
-        if np.linalg.norm(self.data.qvel[7:10]) < 0.005:
-            reward += 10
-        else:
-            reward -= self._step_counter
-        # print(reward)
+        reward -= 5*np.linalg.norm(mid_pos - np.array([-0.38, -0.26, 0.05]))
+        reward -= 10*np.linalg.norm(obj_pos[:2] - self.goal[:2])
+
+        qpos = self.data.qpos.flat.copy()
+        eepose = construct_choppose(self.ctrl.arm, qpos[0:7], target_at_ee=True)
+        obj_pos = qpos[7:10]
+        obs = self.gen_state(qpos[0:7], eepose, obj_pos)
+
+        vel = np.linalg.norm(obs[8:11]-obs[-3:])
+        if np.linalg.norm(obj_pos[:2] - self.goal[:2]) < 0.005 and vel < 0.005:
+            reward += 5
+        # if np.linalg.norm(obj_pos[:2] - self.goal[:2]) < 0.01:
+        #     reward += 2
+        # if np.linalg.norm(self.data.qvel[7:10]) < 0.005:
+        #     reward += 10
+        # else:
+        #     reward -= self._step_counter
+        print(vel,reward)
 
         return reward, success, False
 
@@ -421,6 +431,7 @@ class TychoEnv_rope(gym.Env):
             state.qvel[7:10] = np.random.rand(3)-0.5
         reset_eepos = self.config['reset_eepose_fn'](self, obj_pos)
         # reset_eepos = np.array([-0.385, -0.28, 0.05001724,0,-1,0,0, -0.36])
+        # import pdb;pdb.set_trace()
         joint_pos = construct_command(self.ctrl.arm, joint_pos, target_vector=reset_eepos)
         state.qpos[0:7] = joint_pos
         state.qpos[7:10] = obj_pos
